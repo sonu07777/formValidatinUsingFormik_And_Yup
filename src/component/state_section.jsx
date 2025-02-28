@@ -1,18 +1,37 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
+// import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { MdError } from "react-icons/md";
 
-const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
-  age: Yup.number()
-    .required("Age is required")
-    .min(1, "You must be at least 21 years old")
-    .max(21, "must be 21"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
-  course: Yup.string().required("Please select a course"),
-});
+const validate = (values) => {
+  const errors = {};
+  // const navigate = useNavigate();
+
+  if (!values.name) {
+    errors.name = "Name is required";
+  }
+
+  if (!values.age) {
+    errors.age = "Age is required";
+  } else if (values.age < 21) {
+    errors.age = "You must be at least 21 years old";
+  } else if (values.age > 21) {
+    errors.age = "Must be 21";
+  }
+
+  if (!values.email) {
+    errors.email = "Email is required";
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+    errors.email = "Invalid email";
+  }
+
+  if (!values.course) {
+    errors.course = "Please select a course";
+  }
+
+  return errors;
+};
 
 const RegistrationForm = () => {
   const formik = useFormik({
@@ -22,7 +41,7 @@ const RegistrationForm = () => {
       email: "",
       course: "",
     },
-    validationSchema,
+    validate,
     onSubmit: (values, { resetForm }) => {
       setTimeout(() => {
         console.log(values);
@@ -34,20 +53,21 @@ const RegistrationForm = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center bg-cover bg-center"
+      className="min-h-screen flex flex-col gap-2 items-center justify-center bg-cover bg-center"
       style={{
         backgroundImage:
-          "url('https://plus.unsplash.com/premium_photo-1675198764235-2dc2b37146c9?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+          "url('https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
       }}>
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className=" bg-opacity-30 backdrop-blur-xl p-8 rounded-lg shadow-lg w-full max-w-md ">
-        <h2 className="text-2xl font-bold text-center mb-4 text-white opacity-70 px-4 py-2"
-      style={{
-        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)'
-      }}>
+        className=" bg-opacity-30 backdrop-blur-[70px] p-8 rounded-l-xl  rounded-lg shadow-lg w-full max-w-md ">
+        <h2
+          className="text-2xl font-bold text-center mb-4 text-white opacity-70 px-4 py-2"
+          style={{
+            textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+          }}>
           Student Registration
         </h2>
         <form onSubmit={formik.handleSubmit}>
@@ -67,7 +87,7 @@ const RegistrationForm = () => {
                   name={field}
                   className="w-full p-2 border-b-2 border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent transition-all duration-300 ease-in-out"
                   {...formik.getFieldProps(field)}
-                  min = {field === "age" ? 0 : null}
+                  min={field === "age" ? 0 : null}
                 />
                 {formik.touched[field] && formik.errors[field] && (
                   <p className="text-red-500 text-sm">
@@ -92,9 +112,11 @@ const RegistrationForm = () => {
             </label>
             <select
               name="course"
-              className="w-full p-2 border-b-2 border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent transition-all duration-300 ease-in-out"
+              className={`w-full p-2 border-b-2 border-gray-400 focus:outline-none focus:border-blue-500 bg-transparent transition-all duration-300 ease-in-out `}
               {...formik.getFieldProps("course")}>
-              <option value="">Select a course</option>
+              <option selected disabled value="">
+                Select a course
+              </option>
               <option value="Engineering">Engineering</option>
               <option value="Medicine">Medicine</option>
               <option value="Arts">Arts</option>
@@ -111,6 +133,11 @@ const RegistrationForm = () => {
           </button>
         </form>
       </motion.div>
+      <button
+        onClick={() => window.history.back()}
+        className="px-4 py-2 bg-[#2070A1] text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 ease-in-out">
+        ← Go Back
+      </button>
     </div>
   );
 };

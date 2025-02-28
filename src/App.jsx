@@ -1,15 +1,20 @@
+// import { useState } from "react";
+import { Link } from "react-router-dom";
+
 import "./App.css";
-import RegistrationForm from "../src/component/state_section";
-import StudentRegistrationForm from "./component/student_registratin_form";
-import { Routes, Route } from "react-router-dom";
+import CoustomRouter from "./Router/router.jsx";
+
 function App() {
+  // const [count, setCount] = useState(0);
+
   return (
-    <div className="  ">
-      <Routes>
-        <Route path="/" element={<StudentRegistrationForm />} />
-        <Route path="/first_form" element={<RegistrationForm />} />
-      </Routes>
-    </div>
+    <div className="app-wrapper">
+
+      <Link to="/">
+      
+      </Link>
+      <CoustomRouter />
+    </div >
   );
 }
 
